@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::body})}">
+<head>
+  <title>Stock de Productos</title>
+</head>
+<body>
+<div class="container mt-5">
+  <h2 class="mb-4 text-primary">📦 Productos en Stock</h2>
+
+  <table class="table table-bordered table-striped shadow-sm">
+    <thead class="table-dark">
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Stock</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="producto : ${productos}"
+        th:classappend="${producto.stock} <= 3 ? 'table-danger' : ''">
+      <td th:text="${producto.nombre}">Nombre</td>
+      <td th:text="${producto.descripcion}">Descripción</td>
+      <td th:text="${producto.precio}">Precio</td>
+      <td th:text="${producto.stock}">Stock</td>
+      <td>
+        <span th:if="${producto.stock} <= 3" class="text-danger fw-bold">⚠ Bajo Stock</span>
+        <span th:if="${producto.stock} > 3" class="text-success fw-bold">✅ Suficiente</span>
+      </td>
+      <td>
+        <a th:href="@{'/ventas/stock/editar/' + ${producto.id}}" class="btn btn-outline-warning btn-sm">
+          ✏️ Editar
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <a th:href="@{/ventas}" class="btn btn-outline-primary mt-3">
+    <i class="fas fa-home"></i> Menú Principal
+  </a>
+</div>
+</body>
+</html>

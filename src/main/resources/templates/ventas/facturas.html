@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::body})}">
+<head>
+  <title>Facturas</title>
+</head>
+<body>
+<div class="container mt-5">
+  <h2 class="mb-4 text-primary">📑 Facturas Realizadas</h2>
+
+  <!-- Botón nueva factura -->
+  <a href="/ventas/facturas/nueva" class="btn btn-success mb-3">
+    <i class="fas fa-plus"></i> Crear Factura
+  </a>
+
+  <!-- Formulario de búsqueda -->
+  <form th:action="@{/ventas/facturas}" method="get" class="mb-4">
+    <div class="row">
+      <div class="col-md-4">
+        <label for="busqueda" class="form-label">🔍Buscar por nombre cliente o número</label>
+        <input type="text" name="busqueda" id="busqueda" class="form-control"
+               placeholder="Ej: Juan o 3"
+               th:value="${busqueda}">
+      </div>
+
+      <div class="col-md-3">
+        <label for="desde" class="form-label">Desde</label>
+        <input type="date" name="desde" id="desde" class="form-control" th:value="${desde}">
+      </div>
+
+      <div class="col-md-3">
+        <label for="hasta" class="form-label">Hasta</label>
+        <input type="date" name="hasta" id="hasta" class="form-control" th:value="${hasta}">
+      </div>
+
+      <div class="col-md-2 d-flex align-items-end">
+        <button class="btn btn-outline-secondary w-100" type="submit">Buscar</button>
+      </div>
+    </div>
+  </form>
+
+
+
+  <!-- Si no hay facturas -->
+  <div th:if="${#lists.isEmpty(facturas)}" class="alert alert-info text-center">
+    <i class="fas fa-info-circle"></i> No hay facturas que coincidan con la búsqueda.
+  </div>
+
+  <!-- Tabla de facturas -->
+  <div th:if="${!#lists.isEmpty(facturas)}">
+    <table class="table table-bordered table-hover shadow-sm">
+      <thead class="table-light text-center">
+      <tr>
+        <th>#</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="factura : ${facturas}" class="text-center align-middle">
+        <td th:text="${factura.id}">1</td>
+        <td th:text="${factura.cliente.nombre + ' ' + factura.cliente.apellido}">Cliente</td>
+        <td th:text="${#temporals.format(factura.fecha, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+        <td>$<span th:text="${factura.total}">0.00</span></td>
+        <td>
+          <a class="btn btn-sm btn-outline-primary"
+             th:href="@{/ventas/facturas/pdf/{id}(id=${factura.id})}">
+            🧾 PDF
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Botón volver -->
+  <div class="mt-4 d-flex justify-content-end">
+    <a th:href="@{/ventas}" class="btn btn-outline-primary">
+      <i class="fas fa-home"></i> Menú Principal
+    </a>
+  </div>
+</div>
+</body>
+</html>

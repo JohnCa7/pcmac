@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::body})}">
+<head>
+  <title>Editar Stock</title>
+</head>
+<body>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">✏️ Editar Stock del Producto</h4>
+    </div>
+    <div class="card-body">
+      <form th:action="@{/ventas/stock/actualizar}" th:object="${producto}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Producto:</label>
+          <input type="text" th:field="*{nombre}" class="form-control" readonly />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Nuevo Stock:</label>
+          <input type="number" th:field="*{stock}" class="form-control" min="0" required />
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-check-circle"></i> Actualizar
+          </button>
+          <a th:href="@{/ventas/stock}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Volver
+          </a>
+          <a th:href="@{/ventas}" class="btn btn-outline-primary ms-auto">
+            <i class="fas fa-home"></i> Menú Principal
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

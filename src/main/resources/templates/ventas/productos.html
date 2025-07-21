@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout (~{::body})}">
+<head>
+  <title>Lista de Productos</title>
+</head>
+<body>
+<div class="container mt-5">
+
+  <!-- Título y botón volver -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary">
+      <i class="fas fa-box-open"></i> Lista de Productos
+    </h2>
+    <a th:href="@{/ventas}" class="btn btn-outline-dark">
+      <i class="fas fa-home"></i> Menú Principal
+    </a>
+  </div>
+
+  <!-- Botón nuevo producto -->
+  <div class="mb-3">
+    <a th:href="@{/ventas/productos/nuevo}" class="btn btn-success">
+      <i class="fas fa-plus"></i> Nuevo Producto
+    </a>
+  </div>
+
+  <!-- Tabla de productos -->
+  <div class="card shadow rounded-4">
+    <div class="card-body">
+      <table class="table table-hover table-bordered align-middle text-center">
+        <thead class="table-primary">
+        <tr>
+          <th>📛 Nombre</th>
+          <th>📝 Descripción</th>
+          <th>💲 Precio</th>
+          <th>📦 Stock</th>
+          <th>🛠️ Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="producto : ${productos}">
+          <td th:text="${producto.nombre}">Nombre</td>
+          <td th:text="${producto.descripcion}">Descripción</td>
+          <td th:text="${producto.precio}">Precio</td>
+          <td th:text="${producto.stock}">Stock</td>
+          <td>
+            <a th:href="@{'/ventas/productos/eliminar/' + ${producto.id}}"
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('¿Estás seguro de eliminar este producto?')">
+              <i class="fas fa-trash"></i> Eliminar
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

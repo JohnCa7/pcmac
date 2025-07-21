@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::body})}">
+<head>
+  <title>Nueva Factura</title>
+</head>
+<body>
+<div class="container mt-5">
+  <div class="card shadow-lg rounded-4 border-0">
+    <div class="card-header bg-primary text-white rounded-top-4">
+      <h3 class="mb-0 text-center">🧾 Crear Nueva Factura</h3>
+    </div>
+    <div class="card-body">
+      <!-- Mensaje de error -->
+      <div th:if="${error}" class="alert alert-danger">
+        <span th:text="${error}"></span>
+      </div>
+
+      <!-- Formulario -->
+      <form th:action="@{/ventas/facturas/guardar}" method="post" class="bg-light p-4 rounded">
+
+        <!-- Cliente -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">👤 Cliente:</label>
+          <select name="clienteId" class="form-select" required>
+            <option value="">Seleccione un cliente</option>
+            <option th:each="cliente : ${clientes}" th:value="${cliente.id}"
+                    th:text="${cliente.nombre} + ' ' + ${cliente.apellido}"></option>
+          </select>
+        </div>
+
+        <!-- Productos -->
+        <h5 class="mt-4 fw-semibold text-primary">📦 Productos</h5>
+        <div id="productos-container">
+          <div class="row mb-3 producto-item">
+            <div class="col-md-6">
+              <label class="form-label">Producto:</label>
+              <select name="productoId" class="form-select" required>
+                <option value="" disabled selected>Seleccione un producto</option>
+                <option th:each="producto : ${productos}"
+                        th:value="${producto.id}"
+                        th:text="${producto.nombre} + ' ($' + ${producto.precio} + ')'"
+                        th:classappend="${producto.stock} <= 3 ? 'text-danger' : ''"
+                        th:title="${producto.stock} <= 3 ? '⚠ Bajo stock' : 'Stock suficiente'">
+                </option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Cantidad:</label>
+              <input type="number" name="cantidad" class="form-control" min="1" value="1" required/>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="button" class="btn btn-outline-danger w-100" onclick="eliminarProducto(this)">
+                🗑
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="mt-4 d-flex gap-2">
+          <button type="button" class="btn btn-secondary" onclick="agregarProducto()">
+            ➕ Agregar otro producto
+          </button>
+          <button type="submit" class="btn btn-success">
+            💾 Guardar Factura
+          </button>
+        </div>
+
+        <!-- Navegación -->
+        <div class="mt-4">
+          <a th:href="@{/ventas/facturas}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Volver
+          </a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function agregarProducto() {
+    const container = document.getElementById("productos-container");
+    const item = container.querySelector(".producto-item");
+    const clone = item.cloneNode(true);
+    clone.querySelector("select").selectedIndex = 0;
+    clone.querySelector("input").value = 1;
+    container.appendChild(clone);
+  }
+
+  function eliminarProducto(button) {
+    const container = document.getElementById("productos-container");
+    const items = container.querySelectorAll(".producto-item");
+    if (items.length > 1) {
+      button.closest(".producto-item").remove();
+    } else {
+      alert("Debe haber al menos un producto.");
+    }
+  }
+</script>
+</body>
+</html>

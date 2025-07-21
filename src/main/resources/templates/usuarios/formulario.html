@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout (~{::body})}">
+<head>
+    <title>Agregar Usuario</title>
+</head>
+<body>
+<div class="container mt-4">
+    <h2 class="mb-4">➕ Nuevo Usuario</h2>
+
+    <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
+
+        <!-- ✅ Errores generales -->
+        <div th:if="${#fields.hasErrors()}">
+            <div class="alert alert-danger">
+                <ul>
+                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Nombre de usuario -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Nombre de Usuario</label>
+            <input type="text" id="username" th:field="*{username}" class="form-control" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" id="password" th:field="*{password}" class="form-control" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+        </div>
+
+        <!-- Rol -->
+        <div class="mb-3">
+            <label for="rol" class="form-label">Rol</label>
+            <select id="rol" th:field="*{rol.id}" class="form-select" required>
+                <option value="" disabled selected>Seleccione un rol</option>
+                <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('rol')}" th:errors="*{rol}"></div>
+        </div>
+
+        <!-- Checkbox habilitado -->
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="habilitado" th:field="*{habilitado}">
+            <label class="form-check-label" for="habilitado">Habilitado</label>
+        </div>
+
+        <!-- Botones -->
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a th:href="@{/usuarios/lista}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+</body>
+</html>
+
